@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" name="title" value="{{ product.title if product else '' }}">
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" name="description">{{ product.description if product else '' }}</textarea>
+    </div>
+    <div class="form-group">
+        <label>Price</label>
+        <input type="text" class="form-control" name="price" value="{{ product.price if product else '' }}">
+    </div>
+    <div class="form-group">
+        <label>Product Photo</label>
+        <input type="file" class="form-control-file" name="image">
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+{% endblock %}

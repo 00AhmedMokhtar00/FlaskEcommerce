@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="product-details">
+
+    <div class="details-container">
+
+        <div className="image-gallery">
+            <div className="main-image">
+              <img
+                src="{% if product.image %}{{ product.get_image_url }}{% else %}{{ url_for('static', filename='images/placeholder.jpg') }}{% endif %}"
+                alt="Selected Product"
+                className="zoom-image"
+              />
+            </div>
+          </div>
+
+
+        <div class="product-info">
+            <h1>{{ product.title }}</h1>
+            <p class="product-info-description">{{ product.description }}</p>
+
+
+            <div class="price">${{ product.price }}</div><br><br>
+            <div class="price"><strong>Created At: </strong> {{ product.created_at }}</div>
+            <div class="price"><strong>Updated At: </strong> {{ product.updated_at }}</div>
+            <div class="separator"></div>
+            </div>
+            <div class="button-row">
+                <a href="{{product.get_update_url}}" class="fancy-button buy-button btn-warning">Edit</a>
+                <a href="{{product.get_delete_url}}" class="fancy-button cart-buttonbtn-danger">Delete</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

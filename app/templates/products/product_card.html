@@ -1,0 +1,27 @@
+<div class="col-md-4">
+    <div class="card">
+        <a href="{{ product.get_show_url }}"
+            style="text-decoration: none; color: inherit;">
+            <img
+                src="{% if product.image %}{{ product.get_image_url }}{% else %}{{ url_for('static', filename='images/placeholder.jpg') }}{% endif %}"
+
+                alt="{{ product.title }}" />
+            <div class="card-content">
+                <h2>{{ product.title }}</h2>
+                <p class="product-description">{{ product.description }}</p>
+                <div class="price">${{ product.price }}</div>
+            </div>
+            <div class="row py-2 px-5">
+                <div class="col">
+                    <a class="btn btn-primary btn-block"
+                        href="{{product.get_update_url}}">Edit</a>
+                </div>
+                <div class="col">
+                    <a class="btn btn-danger btn-block"
+                        href="{{product.get_delete_url}}">Delete</a>
+                </div>
+            </div>
+
+        </a>
+    </div>
+</div>
