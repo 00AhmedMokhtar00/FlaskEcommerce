@@ -1,0 +1,119 @@
+/* Card Styles */
+.card {
+  flex: 0 0 300px;
+  /* max-width: 300px; */
+  border: 1px solid #e0e0e0;
+  margin: 0.2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-light);
+  /* background-color: #fff; */
+  overflow: hidden;
+  transition: transform var(--transition-duration) ease,
+    box-shadow var(--transition-duration) ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: var(--box-shadow-dark);
+}
+
+.card img {
+  width: 100%;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  object-fit: cover;
+  height: 150px;
+  margin-bottom: 10px;
+}
+
+.card h2,
+.card p {
+  margin-bottom: 0.4rem;
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  /* color: black; */
+}
+
+.product-description{
+  color: #666;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.card-content {
+  margin: 0 10px;
+}
+
+.card button {
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  margin: 10px;
+  background-color: #fff;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  border-radius: 20px;
+  transition: background-color var(--transition-duration) ease,
+    color var(--transition-duration) ease;
+}
+
+.card button:hover {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Stock Status Styles */
+.stock-status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  z-index: 1;
+  border-radius: 0 0 5px 0;
+  color: #fff;
+}
+
+.out-of-stock {
+  background-color: rgba(255, 0, 0, 0.8);
+}
+
+.in-stock {
+  background-color: rgba(0, 168, 98, 0.8);
+}
+
+
+
+
+.price-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: .8rem;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.discounted-price {
+  color: #e44d26; /* Or any color to highlight the discounted price */
+}
+
+.discount-percentage {
+  color: #e44d26; /* Or any color to highlight the discount percentage */
+  font-weight: bold;
+}
+
+.price {
+  color: #333;
+}

@@ -1,0 +1,59 @@
+:root {
+    --toggle-width: 45px;
+    --toggle-height: 25px;
+    --toggle-slider-size: calc(var(--toggle-height) - 8px);
+}
+
+.theme-switcher {
+    position: relative;
+    display: inline-block;
+    width: var(--toggle-width);
+    height: var(--toggle-height);
+}
+
+.theme-switcher input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* background-color: whie; */
+    border: 1px solid var(--primary-color-heavier);
+    transition: .4s;
+    border-radius: var(--toggle-height);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: var(--toggle-slider-size);
+    width: var(--toggle-slider-size);
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--primary-color-heavier);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--main-theme-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(calc(var(--toggle-width) - var(--toggle-height)));
+}
+
+.slider.round {
+    border-radius: var(--toggle-height);
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}

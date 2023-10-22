@@ -1,141 +1,106 @@
-from flask import Flask
-from flask import request, redirect, url_for
-from flask import render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.utils import secure_filename
+import os
 
-# create new flask application
-app = Flask(__name__)  # use flask --app app run
-
-
-# define your first route
-@app.route("/")
-def hello_world():
-    return "<h1 style='color:red'>Hello, World!</h1>"
-
-
-@app.route('/request')
-def request_info():
-    print(f"request is here --> {request}")
-    return "<h1 style='color:green; text-align:center'>  This request </h1>"
-
-
-courses = ['django', 'flask', 'odoo', 'react', 'docker']
-
-
-@app.route('/courses')
-def get_courses():
-    return courses
-
-
-@app.route('/courses/<int:index>')
-def get_course(index):
-    try:
-        return courses[index]
-    except:
-        return "404"
-
-
-"adding url roles "
-
-
-def mynewurl():
-    return "<h1> Hello form my new url </h1>"
-
-
-# register function to new url
-app.add_url_rule('/newurl', view_func=mynewurl)
-
-"------------ creating new page for 404 not found error---------"
-
-
-@app.errorhandler(404)
-def page_not_found(error):
-    print(error)
-    return (f"<h1 style='color:red; text-align:center'> "
-            f"Sorry Requested page Not Found !!!"
-            f"{error}"
-            f"</h1>")
-
-
-""" ============= Render template ========"""
-
-students = [{'id': 1, "name": 'Ahmed', 'track': 'python'},
-            {'id': 2, "name": 'Abdelrahman', 'track': 'python'},
-            {'id': 3, "name": 'Eman', 'track': 'python'},
-            {'id': 4, "name": 'Enas', 'track': 'python'}]
-
-
-@app.route('/landing', endpoint='landing')
-def land():
-    return render_template('land/landing.html',
-                           mycourses=courses, students=students)
-
-
-@app.route('/landing/<int:id>', endpoint='student.profile')
-def student_profile(id):
-    filtered_students = list(filter(lambda std: std['id'] == id, students))
-    if filtered_students:
-        student = filtered_students[0]
-        return render_template('land/profile.html', student=student)
-    # return 'Not Found', 404
-    return render_template('errors/page_not_found.html'), 404
-
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 """ Connect to database ====> sqlite """
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-db = SQLAlchemy(app)  # this will create instance folder --> contains db
+db = SQLAlchemy(app)
 
-
-# define db models
-class Student(db.Model):
-    __tablename__ = 'students'
+class Product(db.Model):
+    __tablename__ = "products"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    image = db.Column(db.String, nullable=True)
-
-    def __str__(self):
-        return f"{self.name}"
-
-    def get_image_url(self):
-        return  f'students/images/{self.image}'
-@app.route('/students/', endpoint='students.index')
-def students_index():
-    students = Student.query.all()
-    return  render_template('students/index.html', students=students)
-
-@app.route('/students/<int:id>', endpoint='students.show')
-def student_show(id):
-    student = Student.query.get_or_404(id)
-    return render_template('students/show.html', student=student)
+    image = db.Column(db.String(255), nullable=True)
+    title = db.Column(db.String(150), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    price = db.Column(db.Float, nullable=False)
 
 
-## create new object
-@app.route('/students/create', methods=['GET', 'POST'], endpoint='student.create')
-def create():
-    if request.method=='POST':
-        print(request.form)
-        # print("hiiii")
-        student = Student(name=request.form['name'], image=request.form['image'])
-        db.session.add(student)
+# List products
+@app.route('/')
+def index():
+    products = Product.query.all()
+    return render_template('index.html', products=products)
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('errors/page_not_found.html')
+
+# Product details
+@app.route('/product/<int:id>')
+def product_detail(id):
+    product = Product.query.get_or_404(id)
+    return render_template('product_detail.html', product=product)
+
+# Add product
+@app.route('/product/add', methods=['GET', 'POST'])
+def add_product():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        description = request.form.get('description')
+        price = request.form.get('price')
+        image = request.files['image']
+
+        filename = ""
+        if image:
+            filename = secure_filename(image.filename)
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            image.save(image_path)
+
+        new_product = Product(title=title, description=description, price=price, image=filename)
+        db.session.add(new_product)
         db.session.commit()
-        return redirect(url_for('students.index'))
+        return redirect(url_for('index'))
+    return render_template('add_product.html')
 
-    return  render_template('students/create.html' )
+# Edit product
+@app.route('/product/edit/<int:id>', methods=['GET', 'POST'])
+def edit_product(id):
+    product = Product.query.get(id)
 
-# I need to create table
-"""
-    flask shell
-    db.create_all()
-"""
+    if request.method == 'POST':
+        title = request.form.get('title')
+        description = request.form.get('description')
+        price = request.form.get('price')
+        new_image = request.files.get('image')  # Get the uploaded image
 
-# another option to the application
+        if new_image:
+            # Save the new image if provided
+            filename = secure_filename(new_image.filename)
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            new_image.save(image_path)
+            product.image = filename  # Update the product's image
+
+        product.title = title
+        product.description = description
+        product.price = price
+        db.session.commit()
+        return redirect(url_for('index'))
+
+    return render_template('edit_product.html', product=product)
+
+# Delete product
+@app.route('/product/delete/<int:id>')
+def delete_product(id):
+    product = Product.query.get_or_404(id)
+    db.session.delete(product)
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
+
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
-
-# from terminal
-"""
-    export FLASK_APP=app  
-    export DEBUG=True
-    to run pp 
-    flask run --debug
-"""

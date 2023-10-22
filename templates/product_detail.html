@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="product-details">
+
+    <div class="details-container">
+
+        <div className="image-gallery">
+            <div className="main-image">
+              <img
+                src="{{ url_for('static', filename='uploads/' + product.image) }}"
+                alt="Selected Product"
+                className="zoom-image"
+              />
+            </div>
+          </div>
+
+
+        <div class="product-info">
+            <h1>{{ product.title }}</h1>
+            <p class="product-info-description">{{ product.description }}</p>
+
+
+            <div class="price">${{ product.price }}</div>
+            <div class="separator"></div>
+            </div>
+            <div class="button-row">
+                <a href="{{ url_for('edit_product', id=product.id) }}" class="fancy-button buy-button btn-warning">Edit</a>
+                <a href="{{ url_for('delete_product', id=product.id) }}" class="fancy-button cart-buttonbtn-danger">Delete</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
