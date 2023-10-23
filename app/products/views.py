@@ -4,6 +4,7 @@ from flask import current_app, request,render_template, redirect, url_for
 app = current_app
 from werkzeug.utils import secure_filename
 
+from app.categories.models import Category
 from .models import Product
 from . import product_blueprint
 
@@ -32,8 +33,10 @@ def create():
 
         product = Product.create_product(request.form, filename)
 
+
         return redirect(url_for('products.products_index'))
-    return render_template('products/add_product.html')
+    categories = Category.get_all_objects()
+    return render_template('products/add_product.html', categories=categories)
 
 # Update product
 @product_blueprint.route('/update/<int:id>', endpoint='update', methods=['GET', 'POST'])
@@ -51,8 +54,8 @@ def update(id):
 
         updated_product = Product.edit_product(id, request.form, filename)
         return redirect(url_for('products.products_index'))
-
-    return render_template('products/edit_product.html', product=product)
+    categories = Category.get_all_objects()
+    return render_template('products/edit_product.html', product=product, categories=categories)
 
 
 # Delete product

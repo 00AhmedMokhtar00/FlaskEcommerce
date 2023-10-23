@@ -1,0 +1,33 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<a href="{{ url_for('categories.create_category') }}" class="btn btn-primary"> Add new Category  </a>
+
+{% if categories %}
+
+<h1> All Categories  </h1>
+    <table class="table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Show</th>
+            <th>Delete</th>
+        </tr>
+        {% for category in categories %}
+            <tr>
+                <td>{{category.id}}</td>
+                <td>{{category.name}}</td>
+
+                <td> <a class="btn btn-info" href="{{category.get_show_url}}"> Show </a></td>
+                <td> <a class="btn btn-danger" href="{{category.get_delete_url}}"> Delete </a></td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+{% else %}
+<p>No categories found.</p>
+{% endif %}
+
+{% endblock %}

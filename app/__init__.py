@@ -26,6 +26,8 @@ def create_app(config_name='dev'):
     #register blueprint in the application
     from .products import product_blueprint
     app.register_blueprint(product_blueprint)
+    from .categories import category_blueprint
+    app.register_blueprint(category_blueprint)
     from . import views
     app.register_blueprint(views.main_blueprint)
 

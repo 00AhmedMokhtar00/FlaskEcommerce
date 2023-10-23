@@ -3,7 +3,7 @@ from flask import url_for
 from app.models import db
 
 class Product(db.Model):
-    __tablename__ = "products"
+    __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.String(255), nullable=True)
     title = db.Column(db.String(150), nullable=False)
@@ -11,6 +11,11 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime,server_onupdate=db.func.now(), server_default=db.func.now())
+    # category = db.Column(db.String)
+    # category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
+    category = db.relationship('Category', backref='products', foreign_keys=[category_id])
+
 
     @classmethod
     def get_all_objects(cls):
@@ -24,8 +29,6 @@ class Product(db.Model):
     def create_product(cls, request_form, image):
         prd = cls(**request_form)
         prd.image = image
-
-
 
         db.session.add(prd)
         db.session.commit()
