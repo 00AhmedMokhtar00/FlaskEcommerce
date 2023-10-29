@@ -11,8 +11,6 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime,server_onupdate=db.func.now(), server_default=db.func.now())
-    # category = db.Column(db.String)
-    # category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     category = db.relationship('Category', backref='products', foreign_keys=[category_id])
 
@@ -26,7 +24,7 @@ class Product(db.Model):
         db.session.commit()
 
     @classmethod
-    def create_product(cls, request_form, image):
+    def create_product(cls, request_form, image=None):
         prd = cls(**request_form)
         prd.image = image
 
@@ -39,13 +37,19 @@ class Product(db.Model):
         return  cls.query.get_or_404(id)
 
     @classmethod
-    def edit_product(cls, id, new_data, new_image):
+    def edit_product(cls, id, new_data, new_image=None):
         product = cls.query.get(id)
+        if not product:
+            return None
+
         if new_image:
             product.image = new_image
+
         for key, value in new_data.items():
             setattr(product, key, value)
+
         db.session.commit()
+        return product
 
     @classmethod
     def delete_product(cls, id):
@@ -66,3 +70,15 @@ class Product(db.Model):
     @property
     def get_delete_url(self):
         return  url_for('products.delete', id=self.id)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'image': self.image,
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat(),
+            'category_id': self.category_id
+        }

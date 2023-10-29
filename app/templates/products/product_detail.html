@@ -5,16 +5,12 @@
 
     <div class="details-container">
 
-        <div className="image-gallery">
-            <div className="main-image">
-              <img
-                src="{% if product.image %}{{ product.get_image_url }}{% else %}{{ url_for('static', filename='images/placeholder.jpg') }}{% endif %}"
-                alt="Selected Product"
-                className="zoom-image"
-              />
-            </div>
-          </div>
-
+        <div class="main-image">
+          <img class="zoom-image"
+            src="{% if product.image %}{{ product.get_image_url }}{% else %}{{ url_for('static', filename='images/placeholder.jpg') }}{% endif %}"
+            alt="Selected Product"
+          />
+        </div>
 
         <div class="product-info">
             <h1>{{ product.title }}</h1>

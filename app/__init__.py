@@ -30,5 +30,9 @@ def create_app(config_name='dev'):
     app.register_blueprint(category_blueprint)
     from . import views
     app.register_blueprint(views.main_blueprint)
+    from .products import api_views
+    app.register_blueprint(api_views.products_api_blueprint)
+    from .categories import api_views
+    app.register_blueprint(api_views.categories_api_blueprint)
 
     return app

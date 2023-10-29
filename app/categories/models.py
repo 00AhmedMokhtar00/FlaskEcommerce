@@ -6,7 +6,6 @@ class Category(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
-    # products = db.relationship('Product', backref='category_name', lazy=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -38,6 +37,7 @@ class Category(db.Model):
         for key, value in new_data.items():
             setattr(category, key, value)
         db.session.commit()
+        return category
 
     @classmethod
     def delete_category(cls, id):
@@ -54,3 +54,9 @@ class Category(db.Model):
     @property
     def get_delete_url(self):
         return  url_for('categories.delete', id=self.id)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
