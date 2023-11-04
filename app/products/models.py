@@ -59,7 +59,9 @@ class Product(db.Model):
 
     @property
     def get_image_url(self):
-        return url_for('static', filename=f'uploads/projects/{self.image}')
+        if self.image:
+            return url_for('static', filename=f'uploads/products/{self.image}')
+        return None
 
     @property
     def get_show_url(self):
@@ -74,7 +76,7 @@ class Product(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'image': self.image,
+            'image': self.get_image_url,
             'title': self.title,
             'description': self.description,
             'price': self.price,

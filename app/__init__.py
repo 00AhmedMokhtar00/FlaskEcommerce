@@ -10,7 +10,7 @@ def create_app(config_name='dev'):
     app = Flask(__name__)
     current_config = AppConfig[config_name]
 
-    app.config['PROJECTS_UPLOAD_FOLDER'] = 'app/static/uploads/projects'
+    app.config['PROJECTS_UPLOAD_FOLDER'] = 'app/static/uploads/products'
     upload_folder = app.config['PROJECTS_UPLOAD_FOLDER']
     if not os.path.exists(upload_folder):
         os.makedirs(upload_folder)

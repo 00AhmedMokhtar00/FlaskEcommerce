@@ -60,6 +60,11 @@
   transform: scale(1.5) translate(55%, 10%);
 }
 
+.zoom-image{
+  width: 100%;
+  height: 100%;
+}
+
 
 .fancy-button {
   background-color: var(--primary-color);
